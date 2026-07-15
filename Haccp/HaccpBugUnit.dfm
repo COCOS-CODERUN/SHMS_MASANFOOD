@@ -1,0 +1,866 @@
+object HaccpBugForm: THaccpBugForm
+  Left = 0
+  Top = 0
+  Align = alClient
+  Caption = #48169#52649#48169#49436#44288#47532#45824#51109
+  ClientHeight = 688
+  ClientWidth = 884
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = #47569#51008' '#44256#46357
+  Font.Style = []
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnShow = FormShow
+  TextHeight = 17
+  object cxGBox_top: TcxGroupBox
+    Left = 0
+    Top = 0
+    Align = alTop
+    PanelStyle.Active = True
+    Style.LookAndFeel.NativeStyle = False
+    Style.LookAndFeel.SkinName = 'LondonLiquidSky'
+    StyleDisabled.LookAndFeel.NativeStyle = False
+    StyleDisabled.LookAndFeel.SkinName = 'LondonLiquidSky'
+    TabOrder = 0
+    Height = 56
+    Width = 884
+    object cxLabel64: TcxLabel
+      Left = 3
+      Top = 3
+      AutoSize = False
+      Caption = #51216#44160#51068#51088
+      ParentFont = False
+      Style.BorderStyle = ebsSingle
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -13
+      Style.Font.Name = #47569#51008' '#44256#46357
+      Style.Font.Style = []
+      Style.LookAndFeel.NativeStyle = False
+      Style.LookAndFeel.SkinName = 'Lilian'
+      Style.IsFontAssigned = True
+      StyleDisabled.LookAndFeel.NativeStyle = False
+      StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+      StyleFocused.LookAndFeel.NativeStyle = False
+      StyleFocused.LookAndFeel.SkinName = 'Lilian'
+      StyleHot.LookAndFeel.NativeStyle = False
+      StyleHot.LookAndFeel.SkinName = 'Lilian'
+      Properties.Alignment.Horz = taCenter
+      Properties.Alignment.Vert = taVCenter
+      Height = 25
+      Width = 100
+      AnchorX = 53
+      AnchorY = 16
+    end
+    object cxDEdit_date: TcxDateEdit
+      Left = 3
+      Top = 27
+      AutoSize = False
+      Properties.DateButtons = [btnClear, btnToday]
+      Style.LookAndFeel.NativeStyle = False
+      Style.LookAndFeel.SkinName = 'Lilian'
+      StyleDisabled.LookAndFeel.NativeStyle = False
+      StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+      StyleFocused.LookAndFeel.NativeStyle = False
+      StyleFocused.LookAndFeel.SkinName = 'Lilian'
+      StyleHot.LookAndFeel.NativeStyle = False
+      StyleHot.LookAndFeel.SkinName = 'Lilian'
+      TabOrder = 1
+      Height = 25
+      Width = 100
+    end
+    object cxGroupBox1: TcxGroupBox
+      Left = 149
+      Top = 3
+      Align = alRight
+      PanelStyle.Active = True
+      Style.BorderStyle = ebsNone
+      Style.LookAndFeel.NativeStyle = False
+      Style.LookAndFeel.SkinName = 'LondonLiquidSky'
+      StyleDisabled.LookAndFeel.NativeStyle = False
+      StyleDisabled.LookAndFeel.SkinName = 'LondonLiquidSky'
+      TabOrder = 2
+      Height = 50
+      Width = 366
+      object cxLabel3: TcxLabel
+        Left = 1
+        Top = 1
+        AutoSize = False
+        Caption = #51216#44160#51452#44592
+        ParentFont = False
+        Style.BorderStyle = ebsSingle
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -13
+        Style.Font.Name = #47569#51008' '#44256#46357
+        Style.Font.Style = []
+        Style.LookAndFeel.NativeStyle = False
+        Style.LookAndFeel.SkinName = 'Lilian'
+        Style.IsFontAssigned = True
+        StyleDisabled.LookAndFeel.NativeStyle = False
+        StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+        StyleFocused.LookAndFeel.NativeStyle = False
+        StyleFocused.LookAndFeel.SkinName = 'Lilian'
+        StyleHot.LookAndFeel.NativeStyle = False
+        StyleHot.LookAndFeel.SkinName = 'Lilian'
+        Properties.Alignment.Horz = taCenter
+        Properties.Alignment.Vert = taVCenter
+        Height = 48
+        Width = 70
+        AnchorX = 36
+        AnchorY = 25
+      end
+      object cxLabel4: TcxLabel
+        Left = 69
+        Top = 1
+        AutoSize = False
+        Caption = #54616#51208#44592'(4~9'#50900')'
+        ParentFont = False
+        Style.BorderStyle = ebsSingle
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -13
+        Style.Font.Name = #47569#51008' '#44256#46357
+        Style.Font.Style = []
+        Style.LookAndFeel.NativeStyle = False
+        Style.LookAndFeel.SkinName = 'Lilian'
+        Style.IsFontAssigned = True
+        StyleDisabled.LookAndFeel.NativeStyle = False
+        StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+        StyleFocused.LookAndFeel.NativeStyle = False
+        StyleFocused.LookAndFeel.SkinName = 'Lilian'
+        StyleHot.LookAndFeel.NativeStyle = False
+        StyleHot.LookAndFeel.SkinName = 'Lilian'
+        Properties.Alignment.Horz = taCenter
+        Properties.Alignment.Vert = taVCenter
+        Height = 25
+        Width = 100
+        AnchorX = 119
+        AnchorY = 14
+      end
+      object cxLabel6: TcxLabel
+        Left = 69
+        Top = 24
+        AutoSize = False
+        Caption = #46041#51208#44592'(10~3'#50900')'
+        ParentFont = False
+        Style.BorderStyle = ebsSingle
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -13
+        Style.Font.Name = #47569#51008' '#44256#46357
+        Style.Font.Style = []
+        Style.LookAndFeel.NativeStyle = False
+        Style.LookAndFeel.SkinName = 'Lilian'
+        Style.IsFontAssigned = True
+        StyleDisabled.LookAndFeel.NativeStyle = False
+        StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+        StyleFocused.LookAndFeel.NativeStyle = False
+        StyleFocused.LookAndFeel.SkinName = 'Lilian'
+        StyleHot.LookAndFeel.NativeStyle = False
+        StyleHot.LookAndFeel.SkinName = 'Lilian'
+        Properties.Alignment.Horz = taCenter
+        Properties.Alignment.Vert = taVCenter
+        Height = 25
+        Width = 100
+        AnchorX = 119
+        AnchorY = 37
+      end
+      object cxLabel7: TcxLabel
+        Left = 167
+        Top = 1
+        AutoSize = False
+        Caption = ' '#50900' 2'#54924' ('#47588#50900' 2, 4'#51452#52264' '#44552#50836#51068')'
+        ParentFont = False
+        Style.BorderStyle = ebsSingle
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -13
+        Style.Font.Name = #47569#51008' '#44256#46357
+        Style.Font.Style = []
+        Style.LookAndFeel.NativeStyle = False
+        Style.LookAndFeel.SkinName = 'Lilian'
+        Style.IsFontAssigned = True
+        StyleDisabled.LookAndFeel.NativeStyle = False
+        StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+        StyleFocused.LookAndFeel.NativeStyle = False
+        StyleFocused.LookAndFeel.SkinName = 'Lilian'
+        StyleHot.LookAndFeel.NativeStyle = False
+        StyleHot.LookAndFeel.SkinName = 'Lilian'
+        Properties.Alignment.Horz = taLeftJustify
+        Properties.Alignment.Vert = taVCenter
+        Height = 25
+        Width = 200
+        AnchorY = 14
+      end
+      object cxLabel8: TcxLabel
+        Left = 167
+        Top = 24
+        AutoSize = False
+        Caption = ' '#50900' 1'#54924' ('#47588#50900' 4'#51452#52264' '#44552#50836#51068')'
+        ParentFont = False
+        Style.BorderStyle = ebsSingle
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -13
+        Style.Font.Name = #47569#51008' '#44256#46357
+        Style.Font.Style = []
+        Style.LookAndFeel.NativeStyle = False
+        Style.LookAndFeel.SkinName = 'Lilian'
+        Style.IsFontAssigned = True
+        StyleDisabled.LookAndFeel.NativeStyle = False
+        StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+        StyleFocused.LookAndFeel.NativeStyle = False
+        StyleFocused.LookAndFeel.SkinName = 'Lilian'
+        StyleHot.LookAndFeel.NativeStyle = False
+        StyleHot.LookAndFeel.SkinName = 'Lilian'
+        Properties.Alignment.Horz = taLeftJustify
+        Properties.Alignment.Vert = taVCenter
+        Height = 25
+        Width = 200
+        AnchorY = 37
+      end
+    end
+    object cxGroupBox2: TcxGroupBox
+      Left = 515
+      Top = 3
+      Align = alRight
+      PanelStyle.Active = True
+      Style.BorderStyle = ebsNone
+      Style.LookAndFeel.NativeStyle = False
+      Style.LookAndFeel.SkinName = 'LondonLiquidSky'
+      StyleDisabled.LookAndFeel.NativeStyle = False
+      StyleDisabled.LookAndFeel.SkinName = 'LondonLiquidSky'
+      TabOrder = 3
+      Height = 50
+      Width = 366
+      object cxLabel9: TcxLabel
+        Left = 1
+        Top = 1
+        AutoSize = False
+        Caption = #44368#52404#51452#44592
+        ParentFont = False
+        Style.BorderStyle = ebsSingle
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -13
+        Style.Font.Name = #47569#51008' '#44256#46357
+        Style.Font.Style = []
+        Style.LookAndFeel.NativeStyle = False
+        Style.LookAndFeel.SkinName = 'Lilian'
+        Style.IsFontAssigned = True
+        StyleDisabled.LookAndFeel.NativeStyle = False
+        StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+        StyleFocused.LookAndFeel.NativeStyle = False
+        StyleFocused.LookAndFeel.SkinName = 'Lilian'
+        StyleHot.LookAndFeel.NativeStyle = False
+        StyleHot.LookAndFeel.SkinName = 'Lilian'
+        Properties.Alignment.Horz = taCenter
+        Properties.Alignment.Vert = taVCenter
+        Height = 48
+        Width = 70
+        AnchorX = 36
+        AnchorY = 25
+      end
+      object cxLabel10: TcxLabel
+        Left = 69
+        Top = 1
+        AutoSize = False
+        Caption = #45128#45128#51060
+        ParentFont = False
+        Style.BorderStyle = ebsSingle
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -13
+        Style.Font.Name = #47569#51008' '#44256#46357
+        Style.Font.Style = []
+        Style.LookAndFeel.NativeStyle = False
+        Style.LookAndFeel.SkinName = 'Lilian'
+        Style.IsFontAssigned = True
+        StyleDisabled.LookAndFeel.NativeStyle = False
+        StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+        StyleFocused.LookAndFeel.NativeStyle = False
+        StyleFocused.LookAndFeel.SkinName = 'Lilian'
+        StyleHot.LookAndFeel.NativeStyle = False
+        StyleHot.LookAndFeel.SkinName = 'Lilian'
+        Properties.Alignment.Horz = taCenter
+        Properties.Alignment.Vert = taVCenter
+        Height = 25
+        Width = 100
+        AnchorX = 119
+        AnchorY = 14
+      end
+      object cxLabel11: TcxLabel
+        Left = 69
+        Top = 24
+        AutoSize = False
+        Caption = #50976#51064#54364#52649#46321
+        ParentFont = False
+        Style.BorderStyle = ebsSingle
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -13
+        Style.Font.Name = #47569#51008' '#44256#46357
+        Style.Font.Style = []
+        Style.LookAndFeel.NativeStyle = False
+        Style.LookAndFeel.SkinName = 'Lilian'
+        Style.IsFontAssigned = True
+        StyleDisabled.LookAndFeel.NativeStyle = False
+        StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+        StyleFocused.LookAndFeel.NativeStyle = False
+        StyleFocused.LookAndFeel.SkinName = 'Lilian'
+        StyleHot.LookAndFeel.NativeStyle = False
+        StyleHot.LookAndFeel.SkinName = 'Lilian'
+        Properties.Alignment.Horz = taCenter
+        Properties.Alignment.Vert = taVCenter
+        Height = 25
+        Width = 100
+        AnchorX = 119
+        AnchorY = 37
+      end
+      object cxLabel12: TcxLabel
+        Left = 167
+        Top = 1
+        AutoSize = False
+        Caption = ' '#51208#44592' '#48324' '#51216#44160' '#51452#44592#50640' '#46384#46972' '#44368#52404
+        ParentFont = False
+        Style.BorderStyle = ebsSingle
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -13
+        Style.Font.Name = #47569#51008' '#44256#46357
+        Style.Font.Style = []
+        Style.LookAndFeel.NativeStyle = False
+        Style.LookAndFeel.SkinName = 'Lilian'
+        Style.IsFontAssigned = True
+        StyleDisabled.LookAndFeel.NativeStyle = False
+        StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+        StyleFocused.LookAndFeel.NativeStyle = False
+        StyleFocused.LookAndFeel.SkinName = 'Lilian'
+        StyleHot.LookAndFeel.NativeStyle = False
+        StyleHot.LookAndFeel.SkinName = 'Lilian'
+        Properties.Alignment.Horz = taLeftJustify
+        Properties.Alignment.Vert = taVCenter
+        Height = 25
+        Width = 200
+        AnchorY = 14
+      end
+      object cxLabel13: TcxLabel
+        Left = 167
+        Top = 24
+        AutoSize = False
+        Caption = ' 6'#44060#50900
+        ParentFont = False
+        Style.BorderStyle = ebsSingle
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -13
+        Style.Font.Name = #47569#51008' '#44256#46357
+        Style.Font.Style = []
+        Style.LookAndFeel.NativeStyle = False
+        Style.LookAndFeel.SkinName = 'Lilian'
+        Style.IsFontAssigned = True
+        StyleDisabled.LookAndFeel.NativeStyle = False
+        StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+        StyleFocused.LookAndFeel.NativeStyle = False
+        StyleFocused.LookAndFeel.SkinName = 'Lilian'
+        StyleHot.LookAndFeel.NativeStyle = False
+        StyleHot.LookAndFeel.SkinName = 'Lilian'
+        Properties.Alignment.Horz = taLeftJustify
+        Properties.Alignment.Vert = taVCenter
+        Height = 25
+        Width = 200
+        AnchorY = 37
+      end
+    end
+  end
+  object cxGBox_bottom: TcxGroupBox
+    Left = 0
+    Top = 559
+    Align = alBottom
+    PanelStyle.Active = True
+    Style.LookAndFeel.NativeStyle = False
+    Style.LookAndFeel.SkinName = 'LondonLiquidSky'
+    StyleDisabled.LookAndFeel.NativeStyle = False
+    StyleDisabled.LookAndFeel.SkinName = 'LondonLiquidSky'
+    TabOrder = 1
+    Height = 129
+    Width = 884
+    object cxLabel5: TcxLabel
+      Left = 3
+      Top = 3
+      AutoSize = False
+      Caption = #54252#54925' '#49444#48708' '#44288#47532' '#49324#54637
+      ParentFont = False
+      Style.BorderStyle = ebsSingle
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -13
+      Style.Font.Name = #47569#51008' '#44256#46357
+      Style.Font.Style = []
+      Style.LookAndFeel.NativeStyle = False
+      Style.LookAndFeel.SkinName = 'Lilian'
+      Style.IsFontAssigned = True
+      StyleDisabled.LookAndFeel.NativeStyle = False
+      StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+      StyleFocused.LookAndFeel.NativeStyle = False
+      StyleFocused.LookAndFeel.SkinName = 'Lilian'
+      StyleHot.LookAndFeel.NativeStyle = False
+      StyleHot.LookAndFeel.SkinName = 'Lilian'
+      Properties.Alignment.Horz = taCenter
+      Properties.Alignment.Vert = taVCenter
+      Height = 25
+      Width = 280
+      AnchorX = 143
+      AnchorY = 16
+    end
+    object cxMemo_remark1: TcxMemo
+      Left = 3
+      Top = 27
+      Lines.Strings = (
+        'cxMemo1')
+      Style.LookAndFeel.NativeStyle = False
+      Style.LookAndFeel.SkinName = 'Lilian'
+      StyleDisabled.LookAndFeel.NativeStyle = False
+      StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+      StyleFocused.LookAndFeel.NativeStyle = False
+      StyleFocused.LookAndFeel.SkinName = 'Lilian'
+      StyleHot.LookAndFeel.NativeStyle = False
+      StyleHot.LookAndFeel.SkinName = 'Lilian'
+      TabOrder = 1
+      Height = 100
+      Width = 280
+    end
+    object cxLabel1: TcxLabel
+      Left = 282
+      Top = 3
+      AutoSize = False
+      Caption = #48156#49373#50896#51064' '#48143' '#51216#44160#45236#50857
+      ParentFont = False
+      Style.BorderStyle = ebsSingle
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -13
+      Style.Font.Name = #47569#51008' '#44256#46357
+      Style.Font.Style = []
+      Style.LookAndFeel.NativeStyle = False
+      Style.LookAndFeel.SkinName = 'Lilian'
+      Style.IsFontAssigned = True
+      StyleDisabled.LookAndFeel.NativeStyle = False
+      StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+      StyleFocused.LookAndFeel.NativeStyle = False
+      StyleFocused.LookAndFeel.SkinName = 'Lilian'
+      StyleHot.LookAndFeel.NativeStyle = False
+      StyleHot.LookAndFeel.SkinName = 'Lilian'
+      Properties.Alignment.Horz = taCenter
+      Properties.Alignment.Vert = taVCenter
+      Height = 25
+      Width = 280
+      AnchorX = 422
+      AnchorY = 16
+    end
+    object cxMemo_remark2: TcxMemo
+      Left = 282
+      Top = 27
+      Lines.Strings = (
+        'cxMemo1')
+      Style.LookAndFeel.NativeStyle = False
+      Style.LookAndFeel.SkinName = 'Lilian'
+      StyleDisabled.LookAndFeel.NativeStyle = False
+      StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+      StyleFocused.LookAndFeel.NativeStyle = False
+      StyleFocused.LookAndFeel.SkinName = 'Lilian'
+      StyleHot.LookAndFeel.NativeStyle = False
+      StyleHot.LookAndFeel.SkinName = 'Lilian'
+      TabOrder = 3
+      Height = 100
+      Width = 280
+    end
+    object cxLabel2: TcxLabel
+      Left = 561
+      Top = 3
+      AutoSize = False
+      Caption = #44060#49440' '#51312#52824
+      ParentFont = False
+      Style.BorderStyle = ebsSingle
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -13
+      Style.Font.Name = #47569#51008' '#44256#46357
+      Style.Font.Style = []
+      Style.LookAndFeel.NativeStyle = False
+      Style.LookAndFeel.SkinName = 'Lilian'
+      Style.IsFontAssigned = True
+      StyleDisabled.LookAndFeel.NativeStyle = False
+      StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+      StyleFocused.LookAndFeel.NativeStyle = False
+      StyleFocused.LookAndFeel.SkinName = 'Lilian'
+      StyleHot.LookAndFeel.NativeStyle = False
+      StyleHot.LookAndFeel.SkinName = 'Lilian'
+      Properties.Alignment.Horz = taCenter
+      Properties.Alignment.Vert = taVCenter
+      Height = 25
+      Width = 280
+      AnchorX = 701
+      AnchorY = 16
+    end
+    object cxMemo_remark3: TcxMemo
+      Left = 561
+      Top = 27
+      Lines.Strings = (
+        'cxMemo1')
+      Style.LookAndFeel.NativeStyle = False
+      Style.LookAndFeel.SkinName = 'Lilian'
+      StyleDisabled.LookAndFeel.NativeStyle = False
+      StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+      StyleFocused.LookAndFeel.NativeStyle = False
+      StyleFocused.LookAndFeel.SkinName = 'Lilian'
+      StyleHot.LookAndFeel.NativeStyle = False
+      StyleHot.LookAndFeel.SkinName = 'Lilian'
+      TabOrder = 5
+      Height = 100
+      Width = 280
+    end
+  end
+  object cxGBox_fly: TcxGroupBox
+    Left = 0
+    Top = 56
+    Align = alClient
+    PanelStyle.Active = True
+    Style.LookAndFeel.NativeStyle = False
+    Style.LookAndFeel.SkinName = 'LondonLiquidSky'
+    StyleDisabled.LookAndFeel.NativeStyle = False
+    StyleDisabled.LookAndFeel.SkinName = 'LondonLiquidSky'
+    TabOrder = 2
+    Height = 275
+    Width = 884
+    object cxLabel15: TcxLabel
+      Left = 3
+      Top = 3
+      Align = alTop
+      AutoSize = False
+      Caption = #48708#47000' '#54644#52649
+      ParentFont = False
+      Style.BorderStyle = ebsSingle
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -13
+      Style.Font.Name = #47569#51008' '#44256#46357
+      Style.Font.Style = []
+      Style.LookAndFeel.NativeStyle = False
+      Style.LookAndFeel.SkinName = 'Lilian'
+      Style.IsFontAssigned = True
+      StyleDisabled.LookAndFeel.NativeStyle = False
+      StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+      StyleFocused.LookAndFeel.NativeStyle = False
+      StyleFocused.LookAndFeel.SkinName = 'Lilian'
+      StyleHot.LookAndFeel.NativeStyle = False
+      StyleHot.LookAndFeel.SkinName = 'Lilian'
+      Properties.Alignment.Horz = taCenter
+      Properties.Alignment.Vert = taVCenter
+      Height = 25
+      Width = 878
+      AnchorX = 442
+      AnchorY = 16
+    end
+    object cxGrid_fly: TcxGrid
+      Left = 3
+      Top = 28
+      Width = 878
+      Height = 244
+      Align = alClient
+      TabOrder = 1
+      LookAndFeel.NativeStyle = False
+      LookAndFeel.SkinName = 'Lilian'
+      object cxGridTv_fly: TcxGridTableView
+        Navigator.Buttons.CustomButtons = <>
+        Navigator.Buttons.First.Visible = True
+        Navigator.Buttons.PriorPage.Visible = True
+        Navigator.Buttons.Prior.Visible = True
+        Navigator.Buttons.Next.Visible = True
+        Navigator.Buttons.NextPage.Visible = True
+        Navigator.Buttons.Last.Visible = True
+        Navigator.Buttons.Insert.Visible = True
+        Navigator.Buttons.Append.Visible = False
+        Navigator.Buttons.Delete.Visible = True
+        Navigator.Buttons.Edit.Visible = True
+        Navigator.Buttons.Post.Visible = True
+        Navigator.Buttons.Cancel.Visible = True
+        Navigator.Buttons.Refresh.Visible = True
+        Navigator.Buttons.SaveBookmark.Visible = True
+        Navigator.Buttons.GotoBookmark.Visible = True
+        Navigator.Buttons.Filter.Visible = True
+        ScrollbarAnnotations.CustomAnnotations = <>
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsCustomize.ColumnFiltering = False
+        OptionsCustomize.ColumnSorting = False
+        OptionsView.NoDataToDisplayInfoText = '<'#54364#49884#54624' '#45936#51060#53552' '#50630#51020'>'
+        OptionsView.CellAutoHeight = True
+        OptionsView.DataRowHeight = 22
+        OptionsView.GroupByBox = False
+        OptionsView.HeaderHeight = 23
+        object cxGridTv_fly_Location1: TcxGridColumn
+          Caption = #44288#47532#44396#48516
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taCenter
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Options.CellMerging = True
+          Width = 100
+        end
+        object cxGridTv_fly_Location2: TcxGridColumn
+          Caption = #51109#49548#44396#48516
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taCenter
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Options.CellMerging = True
+          Width = 100
+        end
+        object cxGridTv_fly_Location3: TcxGridColumn
+          Caption = #49444#52824#50948#52824
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 150
+        end
+        object cxGridTv_fly_Bug1: TcxGridColumn
+          Caption = #54028#47532
+          DataBinding.ValueType = 'Integer'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taCenter
+          Properties.DisplayFormat = ',0.;'
+          Properties.OnEditValueChanged = cxGridTv_fly_Bug1PropertiesEditValueChanged
+          HeaderAlignmentHorz = taCenter
+          Width = 80
+        end
+        object cxGridTv_fly_Bug2: TcxGridColumn
+          Caption = #45208#48169
+          DataBinding.ValueType = 'Integer'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taCenter
+          Properties.DisplayFormat = ',0.;'
+          Properties.OnEditValueChanged = cxGridTv_fly_Bug1PropertiesEditValueChanged
+          HeaderAlignmentHorz = taCenter
+          Width = 80
+        end
+        object cxGridTv_fly_Bug3: TcxGridColumn
+          Caption = #54616#47336#49332#51060
+          DataBinding.ValueType = 'Integer'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taCenter
+          Properties.DisplayFormat = ',0.;'
+          Properties.OnEditValueChanged = cxGridTv_fly_Bug1PropertiesEditValueChanged
+          HeaderAlignmentHorz = taCenter
+          Width = 80
+        end
+        object cxGridTv_fly_Bug4: TcxGridColumn
+          Caption = #44592#53440
+          DataBinding.ValueType = 'Integer'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taCenter
+          Properties.DisplayFormat = ',0.;'
+          Properties.OnEditValueChanged = cxGridTv_fly_Bug1PropertiesEditValueChanged
+          HeaderAlignmentHorz = taCenter
+          Width = 80
+        end
+        object cxGridTv_fly_total: TcxGridColumn
+          Caption = #54633#44228
+          DataBinding.ValueType = 'Integer'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.DisplayFormat = ',0.;'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 80
+        end
+        object cxGridTv_fly_ID: TcxGridColumn
+          DataBinding.ValueType = 'Integer'
+          Options.Editing = False
+        end
+      end
+      object cxGridLv_fly: TcxGridLevel
+        GridView = cxGridTv_fly
+      end
+    end
+  end
+  object cxGBox_walk: TcxGroupBox
+    Left = 0
+    Top = 339
+    Align = alBottom
+    PanelStyle.Active = True
+    Style.LookAndFeel.NativeStyle = False
+    Style.LookAndFeel.SkinName = 'LondonLiquidSky'
+    StyleDisabled.LookAndFeel.NativeStyle = False
+    StyleDisabled.LookAndFeel.SkinName = 'LondonLiquidSky'
+    TabOrder = 3
+    Height = 220
+    Width = 884
+    object cxLabel14: TcxLabel
+      Left = 3
+      Top = 3
+      Align = alTop
+      AutoSize = False
+      Caption = #49444#52824#47448' '#48143' '#48372#54665' '#54644#52649
+      ParentFont = False
+      Style.BorderStyle = ebsSingle
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -13
+      Style.Font.Name = #47569#51008' '#44256#46357
+      Style.Font.Style = []
+      Style.LookAndFeel.NativeStyle = False
+      Style.LookAndFeel.SkinName = 'Lilian'
+      Style.IsFontAssigned = True
+      StyleDisabled.LookAndFeel.NativeStyle = False
+      StyleDisabled.LookAndFeel.SkinName = 'Lilian'
+      StyleFocused.LookAndFeel.NativeStyle = False
+      StyleFocused.LookAndFeel.SkinName = 'Lilian'
+      StyleHot.LookAndFeel.NativeStyle = False
+      StyleHot.LookAndFeel.SkinName = 'Lilian'
+      Properties.Alignment.Horz = taCenter
+      Properties.Alignment.Vert = taVCenter
+      Height = 25
+      Width = 878
+      AnchorX = 442
+      AnchorY = 16
+    end
+    object cxGrid_walk: TcxGrid
+      Left = 3
+      Top = 28
+      Width = 878
+      Height = 189
+      Align = alClient
+      TabOrder = 1
+      LookAndFeel.NativeStyle = False
+      LookAndFeel.SkinName = 'Lilian'
+      object cxGridTv_walk: TcxGridTableView
+        Navigator.Buttons.CustomButtons = <>
+        Navigator.Buttons.First.Visible = True
+        Navigator.Buttons.PriorPage.Visible = True
+        Navigator.Buttons.Prior.Visible = True
+        Navigator.Buttons.Next.Visible = True
+        Navigator.Buttons.NextPage.Visible = True
+        Navigator.Buttons.Last.Visible = True
+        Navigator.Buttons.Insert.Visible = True
+        Navigator.Buttons.Append.Visible = False
+        Navigator.Buttons.Delete.Visible = True
+        Navigator.Buttons.Edit.Visible = True
+        Navigator.Buttons.Post.Visible = True
+        Navigator.Buttons.Cancel.Visible = True
+        Navigator.Buttons.Refresh.Visible = True
+        Navigator.Buttons.SaveBookmark.Visible = True
+        Navigator.Buttons.GotoBookmark.Visible = True
+        Navigator.Buttons.Filter.Visible = True
+        ScrollbarAnnotations.CustomAnnotations = <>
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsCustomize.ColumnFiltering = False
+        OptionsCustomize.ColumnSorting = False
+        OptionsView.NoDataToDisplayInfoText = '<'#54364#49884#54624' '#45936#51060#53552' '#50630#51020'>'
+        OptionsView.CellAutoHeight = True
+        OptionsView.GroupByBox = False
+        object cxGridTv_walk_Location1: TcxGridColumn
+          Caption = #44288#47532#44396#48516
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taCenter
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Options.CellMerging = True
+          Width = 100
+        end
+        object cxGridTv_walk_Location2: TcxGridColumn
+          Caption = #51109#49548#44396#48516
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taCenter
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Options.CellMerging = True
+          Width = 100
+        end
+        object cxGridTv_walk_Location3: TcxGridColumn
+          Caption = #49444#52824#50948#52824
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 150
+        end
+        object cxGridTv_walk_Bug1: TcxGridColumn
+          Caption = #51536
+          DataBinding.ValueType = 'Integer'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taCenter
+          Properties.DisplayFormat = ',0.;'
+          Properties.OnEditValueChanged = cxGridTv_walk_Bug1PropertiesEditValueChanged
+          HeaderAlignmentHorz = taCenter
+          Width = 80
+        end
+        object cxGridTv_walk_Bug2: TcxGridColumn
+          Caption = #48148#53300
+          DataBinding.ValueType = 'Integer'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taCenter
+          Properties.DisplayFormat = ',0.;'
+          Properties.OnEditValueChanged = cxGridTv_walk_Bug1PropertiesEditValueChanged
+          HeaderAlignmentHorz = taCenter
+          Width = 80
+        end
+        object cxGridTv_walk_Bug3: TcxGridColumn
+          Caption = #44144#48120
+          DataBinding.ValueType = 'Integer'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taCenter
+          Properties.DisplayFormat = ',0.;'
+          Properties.OnEditValueChanged = cxGridTv_walk_Bug1PropertiesEditValueChanged
+          HeaderAlignmentHorz = taCenter
+          Width = 80
+        end
+        object cxGridTv_walk_Bug4: TcxGridColumn
+          Caption = #44592#53440
+          DataBinding.ValueType = 'Integer'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taCenter
+          Properties.DisplayFormat = ',0.;'
+          Properties.OnEditValueChanged = cxGridTv_walk_Bug1PropertiesEditValueChanged
+          HeaderAlignmentHorz = taCenter
+          Width = 80
+        end
+        object cxGridTv_walk_total: TcxGridColumn
+          Caption = #54633#44228
+          DataBinding.ValueType = 'Integer'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taCenter
+          Properties.DisplayFormat = ',0.;'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 80
+        end
+        object cxGridTv_walk_ID: TcxGridColumn
+          DataBinding.ValueType = 'Integer'
+          Visible = False
+          Options.Editing = False
+        end
+      end
+      object cxGridLv_walk: TcxGridLevel
+        GridView = cxGridTv_walk
+      end
+    end
+  end
+  object cxSplitter1: TcxSplitter
+    Left = 0
+    Top = 331
+    Width = 884
+    Height = 8
+    HotZoneClassName = 'TcxMediaPlayer9Style'
+    AlignSplitter = salBottom
+    Control = cxGBox_walk
+  end
+  object UniQuery_comm: TUniQuery
+    Left = 536
+    Top = 256
+  end
+end

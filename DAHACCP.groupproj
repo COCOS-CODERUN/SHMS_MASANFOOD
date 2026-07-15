@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{2CC7ABDB-B8AE-41AF-98DC-3189E597CF4D}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Splash\SplashSDAHACCP.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="SHMS_SEIKO.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="SplashSDAHACCP">
+        <MSBuild Projects="Splash\SplashSDAHACCP.dproj"/>
+    </Target>
+    <Target Name="SplashSDAHACCP:Clean">
+        <MSBuild Projects="Splash\SplashSDAHACCP.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SplashSDAHACCP:Make">
+        <MSBuild Projects="Splash\SplashSDAHACCP.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SHMS_SEIKO">
+        <MSBuild Projects="SHMS_SEIKO.dproj"/>
+    </Target>
+    <Target Name="SHMS_SEIKO:Clean">
+        <MSBuild Projects="SHMS_SEIKO.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SHMS_SEIKO:Make">
+        <MSBuild Projects="SHMS_SEIKO.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="SplashSDAHACCP;SHMS_SEIKO"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="SplashSDAHACCP:Clean;SHMS_SEIKO:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="SplashSDAHACCP:Make;SHMS_SEIKO:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

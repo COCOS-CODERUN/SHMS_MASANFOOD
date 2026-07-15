@@ -1,0 +1,14 @@
+program splash_MASANFOOD;
+
+uses
+  Vcl.Forms,
+  SplashUnit in 'SplashUnit.pas' {SplashForm};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TSplashForm, SplashForm);
+  Application.Run;
+end.
