@@ -1,0 +1,9 @@
+{
+  "appName": "스마트HACCP",
+  "facilities": [
+    {
+      "displayName": "마산푸드",
+      "code": "MASANFOOD"
+    }
+  ]
+}
