@@ -853,16 +853,30 @@ begin
 end;
 
 procedure TMainForm.cxGFlagDBTv_t_flag1PropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+var
+  vflag: string;
 begin
-  // 설비 내 미니PC 시스템 재시작
-  if MessageDlg(uq_Flag.FieldByName('t_name').AsString + '설비의 컴퓨터를 재시작하시겠습니까?', mtWarning, [mbYes, mbNo], 0) = mrNo then Exit;
-
+  // 금속검출기 통신ON/OFF
+  if MessageDlg('['+uq_Flag.FieldByName('Name').AsString + '] 통신상태를 수정하시겠습니까?', mtWarning, [mbYes, mbNo], 0) = mrNo then Exit;
+  if uq_Flag.FieldByName('onoff_flag').AsString = 'Y' then vflag := 'N' else vflag := 'Y';
   With DataModuleForm.FDQuerySetting(uq) do
   begin
     SQL.Add(SQLInsert.Text);
-    ParamByName('t_no').AsInteger := uq_Flag.FieldByName('t_no').AsInteger;
+    ParamByName('onoff_flag').AsString := vflag;
+    ParamByName('MetalNo').AsInteger := uq_Flag.FieldByName('MetalNo').AsInteger;
     ExecSQL;
+    uq_Flag.Refresh;
   end;
+
+  // 설비 내 미니PC 시스템 재시작
+//  if MessageDlg(uq_Flag.FieldByName('t_name').AsString + '설비의 컴퓨터를 재시작하시겠습니까?', mtWarning, [mbYes, mbNo], 0) = mrNo then Exit;
+//
+//  With DataModuleForm.FDQuerySetting(uq) do
+//  begin
+//    SQL.Add(SQLInsert.Text);
+//    ParamByName('t_no').AsInteger := uq_Flag.FieldByName('t_no').AsInteger;
+//    ExecSQL;
+//  end;
 end;
 
 procedure TMainForm.cxGridDBTv_AlarmColumn2GetDisplayText(

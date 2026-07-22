@@ -7849,8 +7849,7 @@ object MainForm: TMainForm
         OptionsView.ColumnAutoWidth = True
         OptionsView.GroupByBox = False
         object cxGFlagDBTv_t_no: TcxGridDBColumn
-          DataBinding.FieldName = 't_no'
-          DataBinding.IsNullValueType = True
+          DataBinding.FieldName = 'MetalNo'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Horz = taCenter
           Properties.ReadOnly = True
@@ -7861,8 +7860,7 @@ object MainForm: TMainForm
         end
         object cxGFlagDBTv_t_name: TcxGridDBColumn
           Caption = #49444#48708#47749
-          DataBinding.FieldName = 't_name'
-          DataBinding.IsNullValueType = True
+          DataBinding.FieldName = 'Name'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Horz = taCenter
           Properties.ReadOnly = True
@@ -7871,18 +7869,17 @@ object MainForm: TMainForm
           Width = 100
         end
         object cxGFlagDBTv_t_flag1: TcxGridDBColumn
-          Caption = #49884#49828#53596' '#51116#49884#51089
-          DataBinding.FieldName = 't_flag1'
-          DataBinding.IsNullValueType = True
+          Caption = #53685#49888'Y/N'
+          DataBinding.FieldName = 'onoff_flag'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Alignment.Horz = taCenter
           Properties.Buttons = <
             item
-              Caption = #51116#49884#51089
+              Caption = 'Y/N'
               Default = True
               Kind = bkText
             end>
-          Properties.ViewStyle = vsButtonsAutoWidth
+          Properties.UseLeftAlignmentOnEditing = False
           Properties.OnButtonClick = cxGFlagDBTv_t_flag1PropertiesButtonClick
           HeaderAlignmentHorz = taCenter
           Width = 100
@@ -8534,7 +8531,6 @@ object MainForm: TMainForm
       end>
   end
   object uq_Note: TUniQuery
-    Connection = DataModuleForm.FDConnection
     SQL.Strings = (
       'select division, times, ItemName, MetalName, checkdate'
       ' from ('
@@ -8606,9 +8602,10 @@ object MainForm: TMainForm
   end
   object uq_Flag: TUniQuery
     SQLInsert.Strings = (
-      'select * from fac_temp_flag')
+      'select MetalNo, Name, onoff_flag from Metal order by MetalNo')
+    Connection = DataModuleForm.FDConnection
     SQL.Strings = (
-      'select * from fac_temp_flag')
+      'select MetalNo, Name, onoff_flag from Metal order by MetalNo')
     Left = 485
     Top = 648
   end
@@ -8619,9 +8616,9 @@ object MainForm: TMainForm
   end
   object uq: TUniQuery
     SQLInsert.Strings = (
-      'update fac_temp_flag'
-      '   set t_flag1 = 1'
-      ' where t_no = :t_no')
+      'update Metal'
+      'set onoff_flag = :onoff_flag'
+      'where MetalNo = :MetalNo')
     Left = 421
     Top = 648
   end

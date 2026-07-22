@@ -791,6 +791,7 @@ inherited CCPMetalCheckForm: TCCPMetalCheckForm
               PropertiesClassName = 'TcxLabelProperties'
               Properties.Alignment.Horz = taCenter
               Properties.Alignment.Vert = taVCenter
+              Visible = False
               HeaderAlignmentHorz = taCenter
               Width = 85
             end
@@ -1059,12 +1060,6 @@ inherited CCPMetalCheckForm: TCCPMetalCheckForm
   inherited cxGBoxForm: TcxGroupBox
     ExplicitWidth = 1333
     Width = 1333
-    inherited cxBtn_New: TcxButton
-      OnClick = cxBtn_NewClick
-    end
-    inherited cxBtn_Save: TcxButton
-      OnClick = cxBtn_SaveClick
-    end
     inherited cxBtn_Delete: TcxButton
       Visible = False
     end
@@ -1074,7 +1069,6 @@ inherited CCPMetalCheckForm: TCCPMetalCheckForm
     end
     inherited cxBtn_Search: TcxButton
       Visible = False
-      OnClick = cxBtn_SearchClick
     end
   end
   object cxGBox_List: TcxGroupBox

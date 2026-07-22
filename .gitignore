@@ -100,3 +100,4 @@ backup/
 *.env
 *.key
 *.pem
+/Win32
