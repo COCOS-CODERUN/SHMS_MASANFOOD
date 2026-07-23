@@ -4,7 +4,7 @@
     <application
         android:allowBackup="false"
         android:usesCleartextTraffic="false"
-        android:label="스마트HACCP"
+        android:label="다HACCP"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

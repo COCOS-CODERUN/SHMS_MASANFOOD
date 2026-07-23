@@ -8,6 +8,8 @@ import '../models/app_user.dart';
 import '../models/facility.dart';
 import '../models/metal_check.dart';
 import '../models/metal_device.dart';
+import '../models/metal_item_pass_count.dart';
+import '../models/metal_item_option.dart';
 import '../models/metal_test_record.dart';
 import '../models/metal_test_response.dart';
 import 'direct_db_client.dart';
@@ -26,7 +28,7 @@ class DbService {
   static const int _metalTestFinalIndex = 3;
   static const int _metalTestGoodsIndex = 4;
   static const int _metalTestLastIndex = 4;
-  static const String _metalTestMenuName = '중요관리점[금속검출]';
+  static const String _metalTestMenuName = '금속검출';
   static const List<String> _metalTestScenarios = [
     'Fe Only Pass',
     'Fe And Goods Pass',
@@ -115,9 +117,12 @@ WHERE M.LoginID = @loginId
   // 금속검출 조회
   Future<List<MetalCheck>> getMetalChecks(
     Facility facility,
-    DateTime date,
-  ) async {
+    DateTime date, {
+    int metalNo = 0,
+  }) async {
     _validateFacility(facility);
+
+    final normalizedMetalNo = metalNo > 0 ? metalNo : 0;
 
     final rows = await _db.query(
       '''
@@ -139,9 +144,10 @@ LEFT JOIN CCPMetalActionContents AS ca WITH(NOLOCK)
 ON ca.MetalDatetime = CONVERT(VARCHAR(19), mc.CheckDate, 120)
 WHERE mc.CheckDate >= CONVERT(DATETIME, @metalDate, 23)
   AND mc.CheckDate < DATEADD(DAY, 1, CONVERT(DATETIME, @metalDate, 23))
+  AND (@metalNo = 0 OR mc.MetalNo = @metalNo)
 ORDER BY mc.CheckDate DESC
 ''',
-      {'metalDate': _formatDate(date)},
+      {'metalDate': _formatDate(date), 'metalNo': normalizedMetalNo},
     );
 
     return rows.map(MetalCheck.fromMap).toList();
@@ -152,10 +158,12 @@ ORDER BY mc.CheckDate DESC
     Facility facility,
     DateTime date, {
     String searchDivision = 'S',
+    int metalNo = 0,
   }) async {
     _validateFacility(facility);
 
     var normalizedDivision = searchDivision.trim().toUpperCase();
+    final normalizedMetalNo = metalNo > 0 ? metalNo : 0;
 
     // 검색 구분
     if (!const ['A', 'S', 'G'].contains(normalizedDivision)) {
@@ -171,16 +179,69 @@ EXEC usp_CCPMetalCheck
     @Option = '2'
     , @SearchDivision = @searchDivision
     , @MetalDate = @metalDate
+    , @MetalNo = @metalNo
 ''',
-        {'searchDivision': normalizedDivision, 'metalDate': _formatDate(date)},
+        {
+          'searchDivision': normalizedDivision,
+          'metalDate': _formatDate(date),
+          'metalNo': normalizedMetalNo,
+        },
       );
 
       return MetalActionList.fromMap({'canEdit': canEdit, 'rows': rows});
     });
   }
 
+  // 품목별 합격수량
+  Future<List<MetalItemPassCount>> getMetalItemPassCounts(
+    Facility facility,
+    DateTime date, {
+    int metalNo = 0,
+  }) async {
+    _validateFacility(facility);
+
+    final normalizedMetalNo = metalNo > 0 ? metalNo : 0;
+    // SQL Server 날짜
+    final metalDate = _formatDate(date).replaceAll('-', '');
+    final rows = await _db.query(
+      '''
+SELECT
+    I.ItemName
+    , COUNT(C.ItemNo) AS Cnt
+FROM MetalCheckNone AS C
+INNER JOIN MasterItem AS I
+ON C.ItemNo = I.ItemID
+WHERE C.CheckDate BETWEEN CONVERT(DATETIME, @metalDate, 112)
+  AND DATEADD(DAY, 1, CONVERT(DATETIME, @metalDate, 112))
+  AND C.MetalNo = CASE WHEN @metalNo = 0 THEN C.MetalNo ELSE @metalNo END
+  AND C.Note IS NULL
+GROUP BY I.ItemName
+ORDER BY I.ItemName
+''',
+      {
+        'metalDate': metalDate,
+        'metalNo': normalizedMetalNo,
+      },
+    );
+
+    return rows.map(MetalItemPassCount.fromMap).toList();
+  }
+
   // 금속검출 이탈사유
-  Future<List<String>> getMetalActionReasons(Facility facility) async {
+  Future<List<String>> getMetalActionReasons(Facility facility) {
+    return _getMetalBasicCodeNames(facility, 'BC010');
+  }
+
+  // 금속검출 개선조치
+  Future<List<String>> getMetalActionContents(Facility facility) {
+    return _getMetalBasicCodeNames(facility, 'BC013');
+  }
+
+  // 금속검출 콤보목록
+  Future<List<String>> _getMetalBasicCodeNames(
+    Facility facility,
+    String basicCodeId,
+  ) async {
     _validateFacility(facility);
 
     final rows = await _db.query(
@@ -192,7 +253,7 @@ FROM BasicCodeDetail AS B WITH(NOLOCK)
 WHERE B.BCID = @basicCodeId
 ORDER BY B.BCDID
 ''',
-      {'basicCodeId': 'BC010'},
+      {'basicCodeId': basicCodeId},
     );
 
     return rows
@@ -275,16 +336,102 @@ EXEC usp_CCPMetalCheck
     final rows = await _db.query(
       '''
 SELECT
-    MetalNo
-    , Name AS MetalName
-FROM Metal WITH(NOLOCK)
-WHERE LEFT(MetalCode, 2) = @metalCode
-ORDER BY MetalNo
+    M.MetalNo
+    , M.Name AS MetalName
+    , C.MetalCheckTime
+    , COALESCE(M.onoff_flag, '') AS OnOffFlag
+FROM Metal AS M WITH(NOLOCK)
+OUTER APPLY(
+    SELECT TOP (1)
+        H.MetalCheckTime
+    FROM HACCPCCPBasic AS H WITH(NOLOCK)
+    WHERE H.CCPFacilityID = M.MetalCode
+) AS C
+WHERE LEFT(M.MetalCode, 2) = @metalCode
+ORDER BY M.MetalNo
 ''',
       {'metalCode': 'CD'},
     );
 
     return rows.map(MetalDevice.fromMap).toList();
+  }
+
+  // 금속검출 품목 조회
+  Future<List<MetalItemOption>> getMetalItems(Facility facility) async {
+    _validateFacility(facility);
+
+    final rows = await _db.query(
+      '''
+SELECT
+    M.ItemID
+    , M.ItemName
+FROM MasterItem AS M WITH(NOLOCK)
+WHERE M.ItemType = @itemType
+  AND M.ItemYn = 1
+  AND M.ItemMetal = 1
+ORDER BY M.ItemName
+    , M.ItemID
+''',
+      {'itemType': 'BD007'},
+    );
+
+    return rows
+        .map(MetalItemOption.fromMap)
+        .where(
+          (item) =>
+              item.itemId.trim().isNotEmpty && item.itemName.trim().isNotEmpty,
+        )
+        .toList();
+  }
+
+  // 금속검출 품목 연결
+  Future<void> linkMetalItem(
+    Facility facility, {
+    required int metalNo,
+    required String itemId,
+  }) async {
+    _validateFacility(facility);
+
+    // 장비 선택
+    if (metalNo < 1) throw Exception('금속검출기를 선택하세요.');
+
+    // 품목 선택
+    if (itemId.trim().isEmpty) throw Exception('품목을 선택하세요.');
+
+    await _db.runExclusive((session) async {
+      final itemRows = await session.query(
+        '''
+SELECT TOP (1)
+    M.ItemID
+FROM MasterItem AS M WITH(NOLOCK)
+WHERE M.ItemID = @itemId
+  AND M.ItemType = @itemType
+  AND M.ItemYn = 1
+  AND M.ItemMetal = 1
+''',
+        {'itemId': itemId.trim(), 'itemType': 'BD007'},
+      );
+
+      // 연결 불가 품목
+      if (itemRows.isEmpty) throw Exception('연결할 수 없는 품목입니다.');
+
+      final updatedRows = await session.query(
+        '''
+SET NOCOUNT ON
+UPDATE MetalItem
+SET ItemID = @itemId
+WHERE MetalNo = @metalNo
+SELECT @@ROWCOUNT AS UpdatedCount
+''',
+        {'itemId': itemId.trim(), 'metalNo': metalNo},
+      );
+
+      // 연결정보 없음
+      if (updatedRows.isEmpty ||
+          _asInt(_value(updatedRows.first, 'UpdatedCount')) < 1) {
+        throw Exception('금속검출기 품목 연결정보가 없습니다.');
+      }
+    });
   }
 
   // 시편테스트 이력
@@ -319,23 +466,55 @@ END
   }
 
   // 시편테스트 시작
-  Future<MetalTestResponse> startMetalTest(Facility facility) async {
+  Future<MetalTestResponse> startMetalTest(
+    Facility facility, {
+    required int metalNo,
+  }) async {
     _validateFacility(facility);
 
-    final rows = await _db.queryLast('''
+    // 장비 선택
+    if (metalNo < 1) throw Exception('금속검출기를 선택하세요.');
+
+    final rows = await _db.queryLast(
+      '''
 SET NOCOUNT ON
 DECLARE @SearchDateTime DATETIME
 DECLARE @ReturnValue INT
+DECLARE @OnOffFlag VARCHAR(10)
+SELECT
+    @OnOffFlag = UPPER(LTRIM(RTRIM(COALESCE(M.onoff_flag, ''))))
+FROM Metal AS M WITH(NOLOCK)
+WHERE M.MetalNo = @metalNo
+
+-- 통신중지 장비
+IF @OnOffFlag = 'N'
+BEGIN
+    SELECT
+        -1 AS ReturnValue
+        , NULL AS SearchDateTime
+        , @OnOffFlag AS OnOffFlag
+    RETURN
+END
+
 SET @SearchDateTime = NULL
 EXEC @ReturnValue = usp_CCPMetalTest
     @SearchDateTime = @SearchDateTime OUTPUT
 SELECT
     @ReturnValue AS ReturnValue
     , CONVERT(VARCHAR(19), @SearchDateTime, 120) AS SearchDateTime
-''');
+    , @OnOffFlag AS OnOffFlag
+''',
+      {'metalNo': metalNo},
+    );
 
     // 시작 결과
     if (rows.isEmpty) throw Exception('시편테스트를 시작할 수 없습니다.');
+
+    // 통신중지 장비
+    if ('${_value(rows.first, 'OnOffFlag') ?? ''}'.trim().toUpperCase() ==
+        'N') {
+      throw Exception('통신중지된 금속검출기입니다.');
+    }
 
     return MetalTestResponse.fromMap({
       'returnValue': _value(rows.first, 'ReturnValue'),
@@ -452,6 +631,7 @@ SELECT
     required bool? sus,
     required bool? susGoods,
     required bool? goods,
+    required String approvalDateTime,
     required DateTime metalDate,
   }) async {
     _validateFacility(facility);
@@ -463,6 +643,9 @@ SELECT
     if (metalCheckTime.trim().isEmpty) {
       throw Exception('시편테스트 시간이 필요합니다.');
     }
+
+    // 결재 기준일
+    final approvalDate = _parseDateTime(approvalDateTime);
 
     await _db.runExclusive((session) async {
       final devices = await session.query(
@@ -527,8 +710,13 @@ EXEC usp_HaccpApproval
     , @WriteDate = @writeDate
     , @MenuName = @menuName
     , @Division = ''
+    , @CheckWriter = @checkWriter
 ''',
-        {'writeDate': _formatDate(metalDate), 'menuName': _metalTestMenuName},
+        {
+          'writeDate': _formatDate(approvalDate),
+          'menuName': _metalTestMenuName,
+          'checkWriter': writer.trim(),
+        },
       );
     });
   }

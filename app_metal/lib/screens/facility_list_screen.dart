@@ -16,7 +16,7 @@ class FacilityListScreen extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('HACCP PRO'),
+        title: const Text('다HACCP'),
       ),
       body: Stack(
         children: [

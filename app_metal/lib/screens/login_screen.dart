@@ -315,7 +315,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'HACCP 로그인',
+                  '다HACCP 로그인',
                   style: Theme.of(
                     context,
                   ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -328,7 +328,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // 오픈소스 라이선스
                   showLicensePage(
                     context: context,
-                    applicationName: '스마트HACCP',
+                    applicationName: '다HACCP',
                   );
                 },
                 icon: const Icon(Icons.info_outline, size: 20),
@@ -518,7 +518,7 @@ class _LoginHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'HACCP',
+                '다HACCP',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 30,

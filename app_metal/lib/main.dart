@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'HACCP Pro',
+      title: '다HACCP',
       debugShowCheckedModeBanner: false,
       // 한국어 로케일
       locale: const Locale('ko', 'KR'),
@@ -260,7 +260,7 @@ class _SplashScreen extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             const Text(
-              'HACCP ALARM',
+              '다HACCP',
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w900,

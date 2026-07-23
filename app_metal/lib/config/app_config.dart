@@ -14,7 +14,7 @@ class AppConfig {
     final jsonStr = await rootBundle.loadString('assets/app_config.json');
     final map = json.decode(jsonStr) as Map<String, dynamic>;
 
-    final appName = map['appName'] as String? ?? 'HACCP 알람';
+    final appName = map['appName'] as String? ?? '다HACCP';
     final facilitiesList = map['facilities'] as List<dynamic>;
 
     final facilities = facilitiesList
