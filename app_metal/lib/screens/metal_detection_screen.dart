@@ -51,7 +51,6 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
   late Future<List<String>> _actionReasonsFuture;
   late Future<List<String>> _actionContentsFuture;
   late Future<List<MetalDevice>> _devicesFuture;
-  late Future<List<MetalItemOption>> _itemsFuture;
   MetalDevice? _selectedDevice;
   MetalItemOption? _selectedItem;
   MetalTestResponse? _session;
@@ -66,6 +65,7 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
   bool _waitingForSignal = false;
   bool _savingActions = false;
   bool _linkingItem = false;
+  bool _updatingDevice = false;
   bool _appActive = true;
   bool _loggingOut = false;
   int _checkMetalNo = 0;
@@ -84,7 +84,6 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
     _actionReasonsFuture = _service.getMetalActionReasons(widget.facility);
     _actionContentsFuture = _service.getMetalActionContents(widget.facility);
     _devicesFuture = _service.getMetalDevices(widget.facility);
-    _itemsFuture = _service.getMetalItems(widget.facility);
     unawaited(_devicesFuture.then<void>(_syncSelectedDevice, onError: (_) {}));
   }
 
@@ -192,7 +191,7 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
   }
 
   // 시편 품목 선택
-  Future<void> _selectMetalItem(List<MetalItemOption> items) async {
+  Future<void> _selectMetalItem() async {
     final device = _selectedDevice;
 
     // 장비 선택
@@ -201,89 +200,117 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
       return;
     }
 
-    // 품목 없음
-    if (items.isEmpty) {
-      _showMessage('연결 가능한 품목이 없습니다.');
-      return;
-    }
-
     // 테스트 진행 중
     if (_testing ||
         _saving ||
         _waitingForSignal ||
         _linkingItem ||
+        _updatingDevice ||
         (_metalCheckTime != null && !_testSaved)) {
       _showMessage('진행 중인 시편테스트를 완료하세요.');
       return;
     }
 
-    final selectedItem = await showModalBottomSheet<MetalItemOption>(
-      context: context,
-      useSafeArea: true,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (sheetContext) => FractionallySizedBox(
-        heightFactor: 0.72,
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 4, 20, 16),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  '품목 선택',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
-                ),
-              ),
-            ),
-            const Divider(height: 1),
-            Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                itemCount: items.length,
-                separatorBuilder: (_, _) => const Divider(height: 1),
-                // 품목 행
-                itemBuilder: (_, index) {
-                  final item = items[index];
-                  final selected = _selectedItem?.itemId == item.itemId;
-
-                  return ListTile(
-                    selected: selected,
-                    leading: Icon(
-                      Icons.inventory_2_rounded,
-                      color: selected
-                          ? Theme.of(context).colorScheme.primary
-                          : null,
-                    ),
-                    title: Text(
-                      item.itemName,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontWeight: FontWeight.w800),
-                    ),
-                    subtitle: Text('품목번호 ${item.itemId}'),
-                    trailing: selected
-                        ? Icon(
-                            Icons.check_circle_rounded,
-                            color: Theme.of(context).colorScheme.primary,
-                          )
-                        : null,
-                    onTap: () => Navigator.pop(sheetContext, item),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-
-    // 선택 취소
-    if (!mounted || selectedItem == null) return;
-
     setState(() => _linkingItem = true);
 
     try {
+      // 원본 팝업 재조회
+      final items = await _service.getMetalItems(widget.facility);
+
+      // 화면 종료
+      if (!mounted) return;
+
+      // 품목 없음
+      if (items.isEmpty) {
+        _showMessage('연결 가능한 품목이 없습니다.');
+        return;
+      }
+
+      // 비고 그룹
+      final groupedItems = <String, List<MetalItemOption>>{};
+
+      for (final item in items) {
+        final remarks = item.remarks.isEmpty ? '비고 없음' : item.remarks;
+        groupedItems.putIfAbsent(remarks, () => []).add(item);
+      }
+
+      final selectedItem = await showModalBottomSheet<MetalItemOption>(
+        context: context,
+        useSafeArea: true,
+        isScrollControlled: true,
+        showDragHandle: true,
+        builder: (sheetContext) => FractionallySizedBox(
+          heightFactor: 0.72,
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 4, 20, 16),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '품목 선택',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                  ),
+                ),
+              ),
+              const Divider(height: 1),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  children: [
+                    for (final group in groupedItems.entries) ...[
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 8),
+                        color: Theme.of(
+                          sheetContext,
+                        ).colorScheme.surfaceContainerHighest,
+                        child: Text(
+                          group.key,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                      for (final item in group.value) ...[
+                        ListTile(
+                          selected: _selectedItem?.itemId == item.itemId,
+                          leading: Icon(
+                            Icons.inventory_2_rounded,
+                            color: _selectedItem?.itemId == item.itemId
+                                ? Theme.of(context).colorScheme.primary
+                                : null,
+                          ),
+                          title: Text(
+                            item.itemName,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontWeight: FontWeight.w800),
+                          ),
+                          subtitle: Text('품목번호 ${item.itemId}'),
+                          trailing: _selectedItem?.itemId == item.itemId
+                              ? Icon(
+                                  Icons.check_circle_rounded,
+                                  color: Theme.of(context).colorScheme.primary,
+                                )
+                              : null,
+                          onTap: () => Navigator.pop(sheetContext, item),
+                        ),
+                        const Divider(height: 1),
+                      ],
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      // 선택 취소
+      if (!mounted || selectedItem == null) return;
+
       await _service.linkMetalItem(
         widget.facility,
         metalNo: device.metalNo,
@@ -306,6 +333,9 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
       });
       _showMessage('${selectedItem.itemName} 품목 연결 완료');
     } catch (e) {
+      // 화면 종료
+      if (!mounted) return;
+
       _showMessage(e.toString());
     } finally {
       // 화면 유지
@@ -337,7 +367,7 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
 
   void _refreshData() {
     // DB 처리 중
-    if (_testing || _saving || _linkingItem) return;
+    if (_testing || _saving || _linkingItem || _updatingDevice) return;
 
     final devicesFuture = _service.getMetalDevices(widget.facility);
     unawaited(devicesFuture.then<void>(_syncSelectedDevice, onError: (_) {}));
@@ -348,12 +378,137 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
       _actionReasonsFuture = _service.getMetalActionReasons(widget.facility);
       _actionContentsFuture = _service.getMetalActionContents(widget.facility);
       _devicesFuture = devicesFuture;
-      _itemsFuture = _service.getMetalItems(widget.facility);
       _recordsFuture = _loadRecords();
     });
   }
 
+  // 장비 설정
+  Future<void> _showDeviceSettings() async {
+    // DB 처리 중
+    if (_testing ||
+        _saving ||
+        _savingActions ||
+        _waitingForSignal ||
+        _linkingItem ||
+        _updatingDevice ||
+        _loggingOut) {
+      return;
+    }
+
+    setState(() => _updatingDevice = true);
+
+    try {
+      final devices = await _service.getMetalSettings(widget.facility);
+
+      // 화면 종료
+      if (!mounted) return;
+
+      // 장비 없음
+      if (devices.isEmpty) {
+        _showMessage('등록된 장비가 없습니다.');
+        return;
+      }
+
+      final selectedDevice = await showModalBottomSheet<MetalDevice>(
+        context: context,
+        useSafeArea: true,
+        showDragHandle: true,
+        builder: (sheetContext) => FractionallySizedBox(
+          heightFactor: 0.62,
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 4, 20, 16),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '설정',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                  ),
+                ),
+              ),
+              const Divider(height: 1),
+              Expanded(
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  itemCount: devices.length,
+                  separatorBuilder: (_, _) => const Divider(height: 1),
+                  itemBuilder: (_, index) {
+                    final device = devices[index];
+
+                    return ListTile(
+                      title: Text(
+                        device.metalName,
+                        style: const TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                      trailing: Switch(
+                        value: device.communicationFlag == 'Y',
+                        onChanged: (_) => Navigator.pop(sheetContext, device),
+                      ),
+                      onTap: () => Navigator.pop(sheetContext, device),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      // 선택 취소
+      if (!mounted || selectedDevice == null) return;
+
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('설정'),
+          content: Text('[${selectedDevice.metalName}] 설정을 변경하시겠습니까?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('취소'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('변경'),
+            ),
+          ],
+        ),
+      );
+
+      // 변경 취소
+      if (!mounted || confirmed != true) return;
+
+      await _service.setMetalCommunication(
+        widget.facility,
+        metalNo: selectedDevice.metalNo,
+        enabled: selectedDevice.communicationFlag != 'Y',
+      );
+
+      final devicesFuture = _service.getMetalDevices(widget.facility);
+      final refreshedDevices = await devicesFuture;
+
+      // 화면 종료
+      if (!mounted) return;
+
+      _devicesFuture = Future.value(refreshedDevices);
+      _syncSelectedDevice(refreshedDevices);
+      _showMessage('설정 변경 완료');
+    } catch (e) {
+      // 화면 종료
+      if (!mounted) return;
+
+      _showMessage(e.toString());
+    } finally {
+      // 화면 유지
+      if (mounted) setState(() => _updatingDevice = false);
+    }
+  }
+
   Future<void> _pickDate() async {
+    // 설정 처리 중
+    if (_updatingDevice) return;
+
     final date = await showAppDatePicker(
       context: context,
       initialDate: _selectedDate,
@@ -377,6 +532,9 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
   }
 
   void _changeActionDivision(Set<String> selected) {
+    // 설정 처리 중
+    if (_updatingDevice) return;
+
     // 검색 구분 없음
     if (selected.isEmpty) return;
 
@@ -394,6 +552,9 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
 
   // 조회 설비 변경
   void _changeCheckDevice(int? value) {
+    // 설정 처리 중
+    if (_updatingDevice) return;
+
     // 선택 취소
     if (value == null) return;
 
@@ -409,6 +570,9 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
 
   // 품목별 합격수량 팝업
   Future<void> _showMetalItemPassCounts(int metalNo, String metalName) async {
+    // 설정 처리 중
+    if (_updatingDevice) return;
+
     final selectedDate = _selectedDate;
     var countsFuture = _service.getMetalItemPassCounts(
       widget.facility,
@@ -819,6 +983,9 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
   }
 
   Future<void> _editMetalAction(MetalCheck check, bool canEdit) async {
+    // 설정 처리 중
+    if (_updatingDevice) return;
+
     // 검출 행
     if (!check.isDetected) return;
 
@@ -1005,7 +1172,7 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
         .toList();
 
     // 변경 행 없음
-    if (changes.isEmpty || _savingActions) return;
+    if (changes.isEmpty || _savingActions || _updatingDevice) return;
 
     // 이탈 사유
     if (changes.any((row) => row.metalBasicReason.trim().isEmpty)) {
@@ -1382,13 +1549,38 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
           ),
           actions: [
             IconButton(
+              tooltip: '설정',
+              onPressed:
+                  _loggingOut ||
+                      _saving ||
+                      _savingActions ||
+                      _testing ||
+                      _waitingForSignal ||
+                      _linkingItem ||
+                      _updatingDevice
+                  ? null
+                  : _showDeviceSettings,
+              icon: _updatingDevice
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.settings_rounded),
+            ),
+            IconButton(
               tooltip: '새로고침',
               icon: const Icon(Icons.refresh_rounded),
-              onPressed: _loggingOut ? null : _refreshData,
+              onPressed: _loggingOut || _updatingDevice ? null : _refreshData,
             ),
             IconButton(
               tooltip: '로그아웃',
-              onPressed: _loggingOut || _saving || _savingActions || _testing
+              onPressed:
+                  _loggingOut ||
+                      _saving ||
+                      _savingActions ||
+                      _testing ||
+                      _updatingDevice
                   ? null
                   : _logout,
               icon: _loggingOut
@@ -1553,7 +1745,7 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
                 ],
                 selected: {_actionDivision},
                 showSelectedIcon: false,
-                onSelectionChanged: _savingActions
+                onSelectionChanged: _savingActions || _updatingDevice
                     ? null
                     : _changeActionDivision,
               ),
@@ -1573,7 +1765,11 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
                       )
                     : const Icon(Icons.save_rounded),
                 label: Text(_savingActions ? '저장 중' : '변경사항 저장'),
-                onPressed: !canEdit || _actionChanges.isEmpty || _savingActions
+                onPressed:
+                    !canEdit ||
+                        _actionChanges.isEmpty ||
+                        _savingActions ||
+                        _updatingDevice
                     ? null
                     : () => _saveMetalActionChanges(checks),
               ),
@@ -1625,7 +1821,9 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
                   ),
                 ),
               ],
-              onChanged: _savingActions ? null : _changeCheckDevice,
+              onChanged: _savingActions || _updatingDevice
+                  ? null
+                  : _changeCheckDevice,
             ),
             const SizedBox(height: 10),
             SizedBox(
@@ -1645,6 +1843,7 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
                         _testing ||
                         _waitingForSignal ||
                         _linkingItem ||
+                        _updatingDevice ||
                         _loggingOut
                     ? null
                     : () => _showMetalItemPassCounts(
@@ -1680,41 +1879,24 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
           return _buildEmpty('등록된 금속검출기가 없습니다.');
         }
 
-        return FutureBuilder<List<MetalItemOption>>(
-          future: _itemsFuture,
-          builder: (context, itemSnapshot) {
-            // 품목 조회 대기
-            if (itemSnapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator.adaptive());
-            }
-
-            // 품목 조회 오류
-            if (itemSnapshot.hasError) {
-              return Center(child: Text(itemSnapshot.error.toString()));
-            }
-
-            final items = itemSnapshot.data ?? [];
-
-            return RefreshIndicator(
-              onRefresh: () async => _refreshData(),
-              child: ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(16),
-                children: [
-                  _buildDevicePicker(devices, isLight),
-                  const SizedBox(height: 12),
-                  _buildItemPicker(items, isLight),
-                  const SizedBox(height: 12),
-                  _buildTestPanel(isLight),
-                  const SizedBox(height: 16),
-                  _buildStepList(isLight),
-                  const SizedBox(height: 16),
-                  _buildRecordSection(isLight),
-                  const SizedBox(height: 24),
-                ],
-              ),
-            );
-          },
+        return RefreshIndicator(
+          onRefresh: () async => _refreshData(),
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16),
+            children: [
+              _buildDevicePicker(devices, isLight),
+              const SizedBox(height: 12),
+              _buildItemPicker(isLight),
+              const SizedBox(height: 12),
+              _buildTestPanel(isLight),
+              const SizedBox(height: 16),
+              _buildStepList(isLight),
+              const SizedBox(height: 16),
+              _buildRecordSection(isLight),
+              const SizedBox(height: 24),
+            ],
+          ),
         );
       },
     );
@@ -1724,7 +1906,7 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
     return Padding(
       padding: const EdgeInsets.all(16),
       child: InkWell(
-        onTap: _pickDate,
+        onTap: _updatingDevice ? null : _pickDate,
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -1835,6 +2017,7 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
                 _testing ||
                 _saving ||
                 _linkingItem ||
+                _updatingDevice ||
                 testInProgress
             ? null
             : (value) {
@@ -1868,14 +2051,14 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
   }
 
   // 품목 연결 카드
-  Widget _buildItemPicker(List<MetalItemOption> items, bool isLight) {
+  Widget _buildItemPicker(bool isLight) {
     final testInProgress = _metalCheckTime != null && !_testSaved;
     final disabled =
-        items.isEmpty ||
         _testing ||
         _saving ||
         _waitingForSignal ||
         _linkingItem ||
+        _updatingDevice ||
         testInProgress;
 
     return Container(
@@ -1904,14 +2087,11 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
                           : Icons.inventory_2_rounded,
                     ),
               label: Text(
-                _linkingItem
-                    ? '연결 중'
-                    : _selectedItem?.itemName ??
-                          (items.isEmpty ? '연결 가능한 품목 없음' : '품목 선택'),
+                _linkingItem ? '연결 중' : _selectedItem?.itemName ?? '품목 선택',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              onPressed: disabled ? null : () => _selectMetalItem(items),
+              onPressed: disabled ? null : _selectMetalItem,
             ),
           ),
           // 선택 품목 번호
@@ -1955,7 +2135,7 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
-              icon: _testing || _saving || _linkingItem
+              icon: _testing || _saving || _linkingItem || _updatingDevice
                   ? const SizedBox(
                       width: 18,
                       height: 18,
@@ -1973,7 +2153,8 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
                       _testing ||
                       _saving ||
                       _waitingForSignal ||
-                      _linkingItem
+                      _linkingItem ||
+                      _updatingDevice
                   ? null
                   : _checkStep,
             ),
@@ -1984,7 +2165,7 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
             child: OutlinedButton.icon(
               icon: const Icon(Icons.restart_alt_rounded),
               label: const Text('초기화'),
-              onPressed: _testing || _saving || _linkingItem
+              onPressed: _testing || _saving || _linkingItem || _updatingDevice
                   ? null
                   : _resetTest,
             ),
@@ -2271,7 +2452,7 @@ class _MetalDetectionScreenState extends State<MetalDetectionScreen>
                       canEdit ? Icons.edit_rounded : Icons.lock_rounded,
                       size: 19,
                     ),
-                    onPressed: canEdit
+                    onPressed: canEdit && !_updatingDevice
                         ? () => _editMetalAction(check, canEdit)
                         : null,
                   ),

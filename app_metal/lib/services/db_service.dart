@@ -218,10 +218,7 @@ WHERE C.CheckDate BETWEEN CONVERT(DATETIME, @metalDate, 112)
 GROUP BY I.ItemName
 ORDER BY I.ItemName
 ''',
-      {
-        'metalDate': metalDate,
-        'metalNo': normalizedMetalNo,
-      },
+      {'metalDate': metalDate, 'metalNo': normalizedMetalNo},
     );
 
     return rows.map(MetalItemPassCount.fromMap).toList();
@@ -356,6 +353,50 @@ ORDER BY M.MetalNo
     return rows.map(MetalDevice.fromMap).toList();
   }
 
+  // 장비 설정 조회
+  Future<List<MetalDevice>> getMetalSettings(Facility facility) async {
+    _validateFacility(facility);
+
+    final rows = await _db.query('''
+SELECT
+    M.MetalNo
+    , M.Name AS MetalName
+    , M.onoff_flag AS OnOffFlag
+FROM Metal AS M
+ORDER BY M.MetalNo
+''');
+
+    return rows.map(MetalDevice.fromMap).toList();
+  }
+
+  // 장비 설정 변경
+  Future<void> setMetalCommunication(
+    Facility facility, {
+    required int metalNo,
+    required bool enabled,
+  }) async {
+    _validateFacility(facility);
+
+    // 장비 선택
+    if (metalNo < 1) throw Exception('금속검출기를 선택하세요.');
+
+    final rows = await _db.query(
+      '''
+SET NOCOUNT ON
+UPDATE Metal
+SET onoff_flag = @onOffFlag
+WHERE MetalNo = @metalNo
+SELECT @@ROWCOUNT AS UpdatedCount
+''',
+      {'onOffFlag': enabled ? 'Y' : 'N', 'metalNo': metalNo},
+    );
+
+    // 변경 대상 없음
+    if (rows.isEmpty || _asInt(_value(rows.first, 'UpdatedCount')) < 1) {
+      throw Exception('설정을 변경할 수 없습니다.');
+    }
+  }
+
   // 금속검출 품목 조회
   Future<List<MetalItemOption>> getMetalItems(Facility facility) async {
     _validateFacility(facility);
@@ -363,25 +404,18 @@ ORDER BY M.MetalNo
     final rows = await _db.query(
       '''
 SELECT
-    M.ItemID
-    , M.ItemName
-FROM MasterItem AS M WITH(NOLOCK)
+    M.ItemName
+    , M.ItemID
+    , M.Remarks
+FROM MasterItem AS M
 WHERE M.ItemType = @itemType
   AND M.ItemYn = 1
   AND M.ItemMetal = 1
-ORDER BY M.ItemName
-    , M.ItemID
 ''',
       {'itemType': 'BD007'},
     );
 
-    return rows
-        .map(MetalItemOption.fromMap)
-        .where(
-          (item) =>
-              item.itemId.trim().isNotEmpty && item.itemName.trim().isNotEmpty,
-        )
-        .toList();
+    return rows.map(MetalItemOption.fromMap).toList();
   }
 
   // 금속검출 품목 연결
